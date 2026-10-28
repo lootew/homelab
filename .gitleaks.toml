@@ -1,0 +1,38 @@
+title = "homelab"
+
+[extend]
+useDefault = true
+
+[[rules]]
+id = "public-ipv4"
+description = "Public IPv4 address"
+regex = '''\b(?:(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)\.){3}(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)\b'''
+tags = ["infra"]
+
+  [[rules.allowlists]]
+  description = "Private ranges, netmasks"
+  regexes = [
+    '''^10\.''',
+    '''^127\.''',
+    '''^0\.0\.0\.0$''',
+    '''^169\.254\.''',
+    '''^172\.(?:1[6-9]|2\d|3[01])\.''',
+    '''^192\.168\.''',
+    '''^100\.(?:6[4-9]|[7-9]\d|1[01]\d|12[0-7])\.''',
+    '''^192\.0\.2\.''',
+    '''^198\.51\.100\.''',
+    '''^203\.0\.113\.''',
+    '''^255\.''',
+  ]
+
+[[rules]]
+id = "phone-ru"
+description = "Russian phone numbes"
+regex = '''\+7[\s()-]*\d{3}[\s()-]*(?:\d[\s-]?){6}\d|\b8[\s(-]*9\d{2}[\s)-]*\d{3}[\s-]*\d{2}[\s-]*\d{2}\b'''
+tags = ["pii"]
+
+[[rules]]
+id = "phone-am"
+description = "Armenian phone numbers"
+regex = '''\+374[\s()-]*\d{2}[\s()-]*(?:\d[\s-]?){5}\d'''
+tags = ["pii"]
