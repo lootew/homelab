@@ -15,7 +15,8 @@ in a separate private repository.
 | Leak protection (pre-commit, gitleaks, push protection) | Done |
 | CI and branch protection | Done |
 | Architecture Decision Records | Ongoing |
-| OpenTofu with remote, encrypted state | Planned |
+| OpenTofu with remote, encrypted state | Done |
+| GitHub repository settings as code | Done |
 | Server configuration with Ansible | Planned |
 | Kubernetes on a single node | Planned |
 | GitOps and encrypted secrets | Planned |
@@ -42,14 +43,17 @@ in a separate private repository.
 ## Repository layout
 
 ```text
-.github/       CI workflow and Dependabot config
-docs/adr/      Architecture Decision Records
+.github/           CI workflow and Dependabot config
+docs/adr/          Architecture Decision Records
+docs/runbooks/     step-by-step procedures for maintenance and recovery
+scripts/           helper scripts for the workstation
+terraform/github/  OpenTofu: GitHub repository settings and rulesets
 
 Planned:
-terraform/     OpenTofu: repository settings and servers
-ansible/       server configuration
-kubernetes/    manifests reconciled by GitOps
-bootstrap/     first boot of a new server
+terraform/         OpenTofu: servers
+ansible/           server configuration
+kubernetes/        manifests reconciled by GitOps
+bootstrap/         first boot of a new server
 ```
 
 ## Decisions
@@ -59,10 +63,12 @@ bootstrap/     first boot of a new server
 - [0003 Kubernetes distribution for a single node](docs/adr/0003-kubernetes-distribution.md) (proposed)
 - [0004 Secret scanning](docs/adr/0004-secret-scanning.md)
 - [0005 Workstation](docs/adr/0005-workstation.md)
+- [0006 OpenTofu state storage](docs/adr/0006-opentofu-state-storage.md)
 
 ## Development
 
 Requirements: Ubuntu 24.04 (native or WSL2), git and pre-commit.
+OpenTofu 1.13 is needed for the `terraform/` directory.
 
 ```bash
 git clone https://github.com/lootew/homelab.git
@@ -74,14 +80,22 @@ The `gitleaks-private` hook reads a config from the private repository,
 cloned next to this one. Without it, commits are blocked; outside this
 setup, skip the hook with `SKIP=gitleaks-private`.
 
-CI runs on every pull request and on pushes to `main`: the pre-commit hooks
-and a gitleaks scan of the full Git history. `main` accepts changes only
-through pull requests with both checks passing.
+CI runs on every pull request and on pushes to `main`: the pre-commit hooks,
+a gitleaks scan of the full Git history and, when OpenTofu code or the
+workflow changes, `tofu fmt` and `tofu validate`. `main` accepts changes only
+through pull requests with the required checks passing.
+
+Working with OpenTofu (credentials, plan and apply order):
+[docs/opentofu.md](docs/opentofu.md).
+Maintenance and recovery procedures: [docs/runbooks/](docs/runbooks/).
 
 ## Public content policy
 
 - No secrets, real addresses, phone numbers or personal data, apart from
   the copyright holder in `LICENSE`.
+- Hosting and storage providers may be named: they appear in provider and
+  backend configuration anyway. Server locations and personal accounts are
+  not published.
 - Examples use documentation address ranges from RFC 5737:
   `192.0.2.0/24`, `198.51.100.0/24`, `203.0.113.0/24`.
 - Environment-specific values (inventory, real addresses) live in the
