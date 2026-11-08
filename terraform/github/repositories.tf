@@ -4,21 +4,21 @@ resource "github_repository" "homelab" {
   visibility  = "public"
 
   has_issues      = true
-  has_projects    = true
-  has_wiki        = true
+  has_projects    = false
+  has_wiki        = false
   has_discussions = false
   is_template     = false
   archived        = false
   homepage_url    = ""
   topics          = []
 
-  allow_merge_commit          = true
+  allow_merge_commit          = false
   allow_squash_merge          = true
-  allow_rebase_merge          = true
+  allow_rebase_merge          = false
   allow_auto_merge            = false
   allow_update_branch         = false
   allow_forking               = true
-  delete_branch_on_merge      = false
+  delete_branch_on_merge      = true
   web_commit_signoff_required = false
 
   merge_commit_title          = "MERGE_MESSAGE"
@@ -54,13 +54,13 @@ resource "github_repository" "homelab_private" {
   homepage_url    = ""
   topics          = []
 
-  allow_merge_commit          = true
+  allow_merge_commit          = false
   allow_squash_merge          = true
-  allow_rebase_merge          = true
+  allow_rebase_merge          = false
   allow_auto_merge            = false
   allow_update_branch         = false
   allow_forking               = true
-  delete_branch_on_merge      = false
+  delete_branch_on_merge      = true
   web_commit_signoff_required = false
 
   merge_commit_title          = "MERGE_MESSAGE"

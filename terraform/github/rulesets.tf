@@ -21,7 +21,7 @@ resource "github_repository_ruleset" "main_protection" {
     required_signatures           = false
 
     pull_request {
-      allowed_merge_methods             = ["merge", "squash", "rebase"]
+      allowed_merge_methods             = ["squash"]
       required_approving_review_count   = 0
       dismiss_stale_reviews_on_push     = false
       require_code_owner_review         = false
@@ -40,6 +40,10 @@ resource "github_repository_ruleset" "main_protection" {
       }
       required_check {
         context        = "pre-commit"
+        integration_id = 15368
+      }
+      required_check {
+        context        = "opentofu"
         integration_id = 15368
       }
     }
